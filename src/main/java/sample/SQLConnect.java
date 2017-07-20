@@ -16,10 +16,10 @@ public class SQLConnect {
     String databaseName = null;
     String username = null;
     String password = null;
+    String sqlQuery = null;
 
-    public SQLConnect(String serverName, String portNumber, String databaseName, String username, String password){
-        this.serverName = serverName;
-        this.portNumber = portNumber;
+
+    public SQLConnect( String databaseName, String username, String password){
         this.databaseName = databaseName;
         this.username = username;
         this.password = password;
@@ -37,13 +37,25 @@ public class SQLConnect {
     }
 
     public void getData() throws Exception{
-        String sqlQuery = "SELECT * FROM dbo.pracownicy";
-        stmt = con.createStatement();
-        rst = stmt.executeQuery(sqlQuery);
-        int lp = 0;
-        while( rst.next() ) {
-            System.out.println("Imie i nazwisko: " + ++lp + " " + rst.getString(1) + " " + rst.getString(2));
+        if( databaseName.equals("Magnat")) {
+            sqlQuery = "SELECT TOP 10 * FROM dbo.Dokumenty";
+            stmt = con.createStatement();
+            rst = stmt.executeQuery(sqlQuery);
+            int lp = 0;
+            while( rst.next() ) {
+                System.out.println(++lp + " " + rst.getString(1) + " " + rst.getString(6));
+            }
+        }else {
+            sqlQuery = "SELECT * FROM dbo.pracownicy";
+            stmt = con.createStatement();
+            rst = stmt.executeQuery(sqlQuery);
+            int lp = 0;
+            while( rst.next() ) {
+                System.out.println(++lp + " " + rst.getString(1) + " " + rst.getString(2 ));
+            }
         }
+
+
     }
 
     public boolean checkConn() throws SQLException {
@@ -53,6 +65,12 @@ public class SQLConnect {
         return false;
     }
 
+    public void setServerName(String serverName){
+        this.serverName = serverName;
+    }
+    public  void setPortNumber(String portNumber){
+        this.portNumber = portNumber;
+    }
 
 
 }

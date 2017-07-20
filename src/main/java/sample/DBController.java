@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 
@@ -46,12 +47,23 @@ public class DBController {
     private void handleConnect(){
         Alert alertDB = new Alert(Alert.AlertType.ERROR);
         SQLConnect sql = new SQLConnect(
-                "localhost",
-                "1025",
                 databaseNameField.getText(),
                 userNameField.getText(),
                 passwordField.getText()
         );
+
+        try{
+            Config cnf = new Config();
+            cnf.getConfig(sql);
+        }catch (IOException ioe ){
+            ioe.printStackTrace();
+            alertDB.initOwner(mainApp.getPrimaryStage());
+            alertDB.setTitle("Błąd pliku konfiguracyjnego!");
+            alertDB.setHeaderText("Nie można znaleźć pliku konfiguracyjnego!");
+            alertDB.setContentText(ioe.getMessage());
+            alertDB.showAndWait();
+        }
+
         try{
             sql.Connect();
             if( sql.checkConn() ){
